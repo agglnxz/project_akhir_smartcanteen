@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1033694925470",
+    "project_id": "uaspraktikum-22130",
+    "storage_bucket": "uaspraktikum-22130.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1033694925470:android:a930b0071665f6f452a18f",
+        "android_client_info": {
+          "package_name": "com.example.project_akhir_smartcanteen"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFfjTVqQ2tkMASgS8jUqvIY4vKt4Bajsk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
