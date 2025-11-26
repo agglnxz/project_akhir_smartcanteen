@@ -12,16 +12,16 @@ class FirestoreServiceGalang {
   Future<void> seedProductsGalang() async {
     // List data dummy minimal 10 produk 
     final List<ProductModelGalang> dummyProductsGalang = [
-      ProductModelGalang(productId: 'P001', name: 'Nasi Goreng', price: 15000, stock: 25, imageUrl: 'https://example.com/ng.jpg'),
-      ProductModelGalang(productId: 'P002', name: 'Mie Ayam', price: 12000, stock: 30, imageUrl: 'https://example.com/ma.jpg'),
-      ProductModelGalang(productId: 'P003', name: 'Soto Ayam', price: 14000, stock: 18, imageUrl: 'https://example.com/sa.jpg'),
-      ProductModelGalang(productId: 'P004', name: 'Es Teh Manis', price: 4000, stock: 50, imageUrl: 'https://example.com/etm.jpg'),
-      ProductModelGalang(productId: 'P005', name: 'Kopi Susu', price: 8000, stock: 45, imageUrl: 'https://example.com/ks.jpg'),
-      ProductModelGalang(productId: 'P006', name: 'Roti Bakar', price: 10000, stock: 22, imageUrl: 'https://example.com/rb.jpg'),
-      ProductModelGalang(productId: 'P007', name: 'Gado-Gado', price: 16000, stock: 15, imageUrl: 'https://example.com/gg.jpg'),
-      ProductModelGalang(productId: 'P008', name: 'Bakso Kuah', price: 18000, stock: 28, imageUrl: 'https://example.com/bk.jpg'),
-      ProductModelGalang(productId: 'P009', name: 'Air Mineral', price: 3000, stock: 60, imageUrl: 'https://example.com/am.jpg'),
-      ProductModelGalang(productId: 'P010', name: 'Nasi Padang', price: 20000, stock: 10, imageUrl: 'https://example.com/np.jpg'),
+      ProductModelGalang(productId: 'P001', name: 'Nasi Goreng', price: 15000, stock: 25, imageUrl: 'assets/images/nasigoreng.jpg'),
+      ProductModelGalang(productId: 'P002', name: 'Mie Ayam', price: 12000, stock: 30, imageUrl: 'assets/images/mieayam.jpg'),
+      ProductModelGalang(productId: 'P003', name: 'Soto Ayam', price: 14000, stock: 18, imageUrl: 'assets/images/sotoayam.jpg'),
+      ProductModelGalang(productId: 'P004', name: 'Es Teh Manis', price: 4000, stock: 50, imageUrl: 'assets/images/estehmanis.jpg'),
+      ProductModelGalang(productId: 'P005', name: 'Kopi Susu', price: 8000, stock: 45, imageUrl: 'assets/images/kopisusu.jpg'),
+      ProductModelGalang(productId: 'P006', name: 'Roti Bakar', price: 10000, stock: 22, imageUrl: 'assets/images/rotibakar.jpg'),
+      ProductModelGalang(productId: 'P007', name: 'Gado-Gado', price: 16000, stock: 15, imageUrl: 'assets/images/gadogado.jpg'),
+      ProductModelGalang(productId: 'P008', name: 'Bakso Kuah', price: 18000, stock: 28, imageUrl: 'assets/images/baksokuah.jpg'),
+      ProductModelGalang(productId: 'P009', name: 'Air Mineral', price: 3000, stock: 60, imageUrl: 'assets/images/airmineral.jpg'),
+      ProductModelGalang(productId: 'P010', name: 'Nasi Padang', price: 20000, stock: 10, imageUrl: 'assets/images/nasipadang.jpg'),
     ];
 
     WriteBatch batchGalang = _db.batch(); // Watermark pada variabel

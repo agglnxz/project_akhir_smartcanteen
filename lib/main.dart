@@ -1,37 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-import 'services/firestore_service.dart'; 
+import 'services/firestore_service.dart';
+
+import 'screens/login_screen.dart';
+import 'screens/register_screen.dart';
+import 'screens/home_screen.dart';
+import 'screens/cart_screen.dart';
 
 // Hapus baris ini setelah seeding berhasil!
 bool shouldSeedData = true; 
 
 void main() async {
-  // 1. Memastikan binding diinisialisasi sebelum memanggil native code (Firebase)
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // 2. Inisialisasi Firebase
   await Firebase.initializeApp();
-  
-  // 3. PANGGIL FUNGSI SEEDING
+
   if (shouldSeedData) {
     print("Memeriksa dan menjalankan seeding data...");
-    
-    // Inisialisasi Service Anda
     final firestoreService = FirestoreServiceGalang();
-    
-    // Panggil fungsi seeding produk
     await firestoreService.seedProductsGalang();
-    
-    // **SANGAT PENTING:** Ubah shouldSeedData menjadi false atau HAPUS BARIS INI
-    // setelah Anda memastikan 10 produk sudah ada di Firebase Firestore.
-    // Jika tidak dihapus/diubah, seeding akan berjalan setiap kali aplikasi dibuka.
     shouldSeedData = false; 
-    
     print("Seeding selesai. Data sudah ada di Firestore.");
   }
-  
-  // 4. Jalankan Aplikasi
+
   runApp(const MyApp());
 }
 
@@ -41,10 +32,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Anggota 3 akan bertanggung jawab pada routing awal.
+    // Routing utama digabung di sini
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Smart E-Kantin',
-      home: Text('Loading...'), // Ganti dengan SplashScreen/LoginScreen
+      theme: ThemeData(
+        fontFamily: 'Poppins',
+      ),
+      initialRoute: '/login',
+      routes: {
+        '/login': (_) => const LoginScreen_yossy(),
+        '/register': (_) => const RegisterScreen_yossy(),
+        '/home': (_) => const HomeScreen_yossy(),
+        '/cart': (_) => const CartScreen_yossy(),
+      },
     );
   }
 }
