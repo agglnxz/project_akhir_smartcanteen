@@ -2,13 +2,28 @@ import 'package:flutter/material.dart';
 import '../widgets/card_menu.dart';
 import '../services/firestore_service.dart';
 import '../models/product_model.dart';
+import '../models/user_model.dart';
+
+// Auth login/logout
+import 'package:firebase_auth/firebase_auth.dart';
+import '../screens/login_screen.dart';
 
 class HomeScreen_yossy extends StatelessWidget {
-  const HomeScreen_yossy({super.key});
+  final UserModelGalang? profile;
+  const HomeScreen_yossy({super.key, this.profile});
 
   @override
   Widget build(BuildContext context) {
     final FirestoreServiceGalang firestoreService = FirestoreServiceGalang();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+
+    void logout() async {
+      await auth.signOut();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginScreen_yossy()),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -19,14 +34,19 @@ class HomeScreen_yossy extends StatelessWidget {
               Navigator.pushNamed(context, "/cart");
             },
             icon: const Icon(Icons.shopping_cart),
-          )
+          ),
+
+          // tombol logout
+          IconButton(
+            onPressed: logout,
+            icon: const Icon(Icons.logout),
+          ),
         ],
       ),
       body: FutureBuilder<List<ProductModelGalang>>(
         future: firestoreService.getProductsGalang(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            // Loading indicator saat data belum siap
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));

@@ -1,16 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/product_model.dart'; 
+import '../models/user_model.dart';  // MODEL USER BARU
 
 class FirestoreServiceGalang {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   
-  // Variabel Collection Names (Watermark)
-  // Collection 2: Products [cite: 15]
-  final String _productsCollectionGalang = 'Products'; 
+  // COLLECTION NAMES
+  final String _productsCollectionGalang = 'Products';
+  final String _usersCollectionGalang = 'Users';   // 🔥 TAMBAHAN BARU
 
-  // Fungsi untuk Seeding Data 10 Produk (Watermark pada fungsi) 
+  // ===============================================================
+  // =============== CRUD PRODUK (PUNYAMU TIDAK DIUBAH) ============
+  // ===============================================================
+
+  // Seeding data produk
   Future<void> seedProductsGalang() async {
-    // List data dummy minimal 10 produk 
     final List<ProductModelGalang> dummyProductsGalang = [
       ProductModelGalang(productId: 'P001', name: 'Nasi Goreng', price: 15000, stock: 25, imageUrl: 'assets/images/nasigoreng.jpg'),
       ProductModelGalang(productId: 'P002', name: 'Mie Ayam', price: 12000, stock: 30, imageUrl: 'assets/images/mieayam.jpg'),
@@ -24,33 +28,55 @@ class FirestoreServiceGalang {
       ProductModelGalang(productId: 'P010', name: 'Nasi Padang', price: 20000, stock: 10, imageUrl: 'assets/images/nasipadang.jpg'),
     ];
 
-    WriteBatch batchGalang = _db.batch(); // Watermark pada variabel
-    print('Memulai seeding ${dummyProductsGalang.length} produk...');
+    WriteBatch batchGalang = _db.batch();
 
     for (var product in dummyProductsGalang) {
-      // Menggunakan Product ID sebagai Document ID di Firestore
-      DocumentReference docRefGalang = _db.collection(_productsCollectionGalang).doc(product.productId);
-      
-      // Menulis data menggunakan fungsi toJsonGalang()
-      batchGalang.set(docRefGalang, product.toJsonGalang()); 
+      DocumentReference docRefGalang = _db
+          .collection(_productsCollectionGalang)
+          .doc(product.productId);
+      batchGalang.set(docRefGalang, product.toJsonGalang());
     }
 
     await batchGalang.commit();
-    print('Seeding data dummy produk berhasil diselesaikan!');
   }
 
-  // Fungsi tambahan yang mungkin diperlukan Anggota 4: Mengambil semua produk
+  // Get all products
   Future<List<ProductModelGalang>> getProductsGalang() async {
     try {
-      final querySnapshotGalang = await _db
-          .collection(_productsCollectionGalang)
-          .get();
+      final querySnapshotGalang =
+          await _db.collection(_productsCollectionGalang).get();
 
-      return querySnapshotGalang.docs.map((doc) => 
-          ProductModelGalang.fromJsonGalang(doc.data()!)).toList();
+      return querySnapshotGalang.docs
+          .map((doc) => ProductModelGalang.fromJsonGalang(doc.data()!))
+          .toList();
     } catch (e) {
       print('Error fetching products: $e');
       return [];
     }
+  }
+
+  // ===============================================================
+  // ==================== BAGIAN USER (BARU) =======================
+  // ===============================================================
+
+  /// 🔥 SIMPAN DATA USER BARU DARI AUTH
+  Future<void> saveUserToFirestore({
+    required String uid,
+    required UserModelGalang user,
+  }) async {
+    await _db.collection(_usersCollectionGalang).doc(uid).set(user.toJsonGalang());
+  }
+
+  Future<UserModelGalang?> getUserByUid(String uid) async {
+    final doc = await _db.collection(_usersCollectionGalang).doc(uid).get();
+    if (doc.exists && doc.data() != null) {
+      return UserModelGalang.fromJsonGalang(doc.data()!);
+    }
+    return null;
+  }
+
+  Future<bool> checkUserIdExists(String userId) async {
+    final query = await _db.collection(_usersCollectionGalang).where('user_id', isEqualTo: userId).get();
+    return query.docs.isNotEmpty;
   }
 }
