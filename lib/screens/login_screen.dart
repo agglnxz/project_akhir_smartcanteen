@@ -71,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen_yossy> {
             const SizedBox(height: 20),
             ElevatedButton(onPressed: _isLoading ? null : _handleLogin, child: _isLoading ? const SizedBox(height: 18, width: 18, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)) : const Text('Login')),
             const SizedBox(height: 12),
-            TextButton(onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const RegisterScreen())), child: const Text('Belum punya akun? Register'))
+            TextButton(onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const RegisterScreen_yossy())), child: const Text('Belum punya akun? Register'))
           ],
         ),
       ),

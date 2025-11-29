@@ -1,16 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'screens/login_screen.dart';
+import 'firebase_options.dart';  // TAMBAHAN: Import firebase_options
 
-// Jika pakai firebase_options.dart, import dan gunakan options:
-// import 'firebase_options.dart';
+// Provider
+import 'package:provider/provider.dart';
+import 'providers/cart_provider.dart';
+
+// Services
+import 'services/firestore_service.dart';  // TAMBAHAN: Untuk seed produk
+
+// Screens
+import 'screens/login_screen.dart';
+import 'screens/register_screen.dart';
+import 'screens/home_screen.dart';
+import 'screens/cart_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    // options: DefaultFirebaseOptions.currentPlatform,
+    options: DefaultFirebaseOptions.currentPlatform,  // TAMBAHAN: Gunakan firebase_options untuk koneksi benar
   );
-  runApp(const MyApp());
+
+  // TAMBAHAN: Jalankan seed produk jika belum ada, agar checkout berhasil
+  final firestoreService = FirestoreServiceGalang();
+  final products = await firestoreService.getProductsGalang();
+  if (products.isEmpty) {
+    await firestoreService.seedProductsGalang();
+  }
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CartProvider_inandiar()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -19,10 +44,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Smart Canteen',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: const LoginScreen_yossy(),
+      title: 'Smart E-Kantin',
+      theme: ThemeData(
+        fontFamily: 'Poppins',
+        primarySwatch: Colors.blue,
+      ),
+      initialRoute: '/login',
+      routes: {
+        '/login': (_) => const LoginScreen_yossy(),
+        '/register': (_) => const RegisterScreen_yossy(),
+        '/home': (_) => const HomeScreen_yossy(),
+        '/cart': (_) => const CartScreen_yossy(),
+      },
     );
   }
 }

@@ -1,8 +1,8 @@
 class ProductModelGalang {
-  final String productId; 
+  final String productId;
   final String name;
-  final num price; 
-  final num stock; 
+  final num price;
+  final num stock;
   final String imageUrl;
 
   ProductModelGalang({
@@ -13,7 +13,6 @@ class ProductModelGalang {
     required this.imageUrl,
   });
 
-  // Fungsi fromJson 
   factory ProductModelGalang.fromJsonGalang(Map<String, dynamic> json) {
     return ProductModelGalang(
       productId: json['product_id'] as String,
@@ -24,14 +23,13 @@ class ProductModelGalang {
     );
   }
 
-  // Fungsi toJson
   Map<String, dynamic> toJsonGalang() {
     return {
-      'product_id': productId, 
-      'name': name, 
-      'price': price, 
-      'stock': stock, 
-      'image_url': imageUrl, 
+      'product_id': productId,
+      'name': name,
+      'price': price,
+      'stock': stock,
+      'image_url': imageUrl,
     };
   }
 }
