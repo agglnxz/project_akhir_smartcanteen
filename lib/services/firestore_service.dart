@@ -79,4 +79,35 @@ class FirestoreServiceGalang {
     final query = await _db.collection(_usersCollectionGalang).where('user_id', isEqualTo: userId).get();
     return query.docs.isNotEmpty;
   }
+
+Future<void> createTransaction_inandiar({
+    required String trxId,
+    required num finalTotal,
+    required List<Map<String, dynamic>> items,
+  }) async {
+    await _db.collection("Transactions").doc(trxId).set({
+      "trx_id": trxId,
+      "total": finalTotal,
+      "status": "Success",
+      "items": items,
+      "date": FieldValue.serverTimestamp(),
+    });
+
+    // UPDATE STOK PRODUK
+    WriteBatch batch = _db.batch();
+
+    for (var item in items) {
+      final productId = item["product_id"];
+      final qty = item["qty"];
+
+      final ref = _db.collection("Products").doc(productId);
+
+      batch.update(ref, {
+        "stock": FieldValue.increment(-qty),
+      });
+    }
+
+    await batch.commit();
+  }
 }
+

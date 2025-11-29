@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import '../controllers/auth_controller.dart';
 import 'login_screen.dart';
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+class RegisterScreen_yossy extends StatefulWidget {
+  const RegisterScreen_yossy({super.key});
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<RegisterScreen_yossy> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _RegisterScreenState extends State<RegisterScreen_yossy> {
   final AuthControllerFirman _authController = AuthControllerFirman();
   final TextEditingController _nameC = TextEditingController();
   final TextEditingController _idC = TextEditingController();

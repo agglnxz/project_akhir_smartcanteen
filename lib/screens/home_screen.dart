@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';  // TAMBAHAN: Jika belum ada
 import '../widgets/card_menu.dart';
 import '../services/firestore_service.dart';
 import '../models/product_model.dart';
 import '../models/user_model.dart';
+import '../providers/cart_provider.dart';  // TAMBAHAN: Jika belum ada
 
 // Auth login/logout
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,7 +33,7 @@ class HomeScreen_yossy extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.pushNamed(context, "/cart");
+              Navigator.pushNamed(context, "/cart", arguments: profile);
             },
             icon: const Icon(Icons.shopping_cart),
           ),
@@ -55,6 +57,11 @@ class HomeScreen_yossy extends StatelessWidget {
           }
 
           final products = snapshot.data!;
+
+          // TAMBAHAN: Set data produk ke CartProvider setelah fetch berhasil
+          // Ini memungkinkan CartScreen mengakses data produk untuk menampilkan gambar, nama, dll.
+          final productsMap_inandiar = {for (var p in products) p.productId: p};
+          Provider.of<CartProvider_inandiar>(context, listen: false).setProductsData_inandiar(productsMap_inandiar);
 
           return ListView.separated(
             padding: const EdgeInsets.all(16),
