@@ -7,11 +7,8 @@ class FirestoreServiceGalang {
   
   // COLLECTION NAMES
   final String _productsCollectionGalang = 'Products';
-  final String _usersCollectionGalang = 'Users';   // 🔥 TAMBAHAN BARU
+  final String _usersCollectionGalang = 'Users';  
 
-  // ===============================================================
-  // =============== CRUD PRODUK (PUNYAMU TIDAK DIUBAH) ============
-  // ===============================================================
 
   // Seeding data produk
   Future<void> seedProductsGalang() async {
@@ -55,11 +52,8 @@ class FirestoreServiceGalang {
     }
   }
 
-  // ===============================================================
-  // ==================== BAGIAN USER (BARU) =======================
-  // ===============================================================
 
-  /// 🔥 SIMPAN DATA USER BARU DARI AUTH
+  // SIMPAN DATA USER BARU DARI AUTH
   Future<void> saveUserToFirestore({
     required String uid,
     required UserModelGalang user,
