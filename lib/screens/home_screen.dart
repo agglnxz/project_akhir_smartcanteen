@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';  // TAMBAHAN: Jika belum ada
+import 'package:provider/provider.dart'; 
 import '../widgets/card_menu.dart';
 import '../services/firestore_service.dart';
 import '../models/product_model.dart';
 import '../models/user_model.dart';
-import '../providers/cart_provider.dart';  // TAMBAHAN: Jika belum ada
+import '../providers/cart_provider.dart'; 
+import '../widgets/loading_indicator.dart';
 
 // Auth login/logout
 import 'package:firebase_auth/firebase_auth.dart';
@@ -49,7 +50,7 @@ class HomeScreen_yossy extends StatelessWidget {
         future: firestoreService.getProductsGalang(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const LoadingIndicatorGalang();
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
