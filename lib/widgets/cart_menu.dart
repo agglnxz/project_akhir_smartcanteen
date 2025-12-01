@@ -18,138 +18,150 @@ class CardMenu_yossy extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        color: const Color.fromRGBO(252, 245, 238, 1),
         boxShadow: const [
           BoxShadow(
-            color: Colors.black26,
+            color: Colors.black12,
             blurRadius: 4,
             offset: Offset(0, 2),
           ),
         ],
       ),
-
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
         children: [
-          // GAMBAR
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.asset(
-              image_yossy,
-              width: 100,
-              height: 100,
-              fit: BoxFit.cover,
-            ),
-          ),
 
-          const SizedBox(width: 12),
-
-          // NAMA & HARGA
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title_yossy,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+          /// ====== ISI CARD ======
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(16),
+                  topRight: Radius.circular(16),
                 ),
-
-                const SizedBox(height: 4),
-
-                Text(
-                  "Rp $price_yossy",
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.green,
-                  ),
+                child: Image.asset(
+                  image_yossy,
+                  height: 100,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
                 ),
+              ),
 
-                // TAMBAHAN: Tampilkan stok produk secara real-time
-                Consumer<CartProvider_inandiar>(
-                  builder: (context, cartProv_inandiar, child) {
-                    // Cari produk berdasarkan nama untuk dapatkan stok
-                    ProductModelGalang? product;
-                    cartProv_inandiar.productsData_inandiar.forEach((id, p) {
-                      if (p.name == title_yossy) {
-                        product = p;
-                      }
-                    });
+              // ===== KOTAK PUTIH (TINGGI AUTO, TANPA OVERFLOW) =====
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title_yossy,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      "Rp $price_yossy",
+                      style: const TextStyle(
+                        color: Color.fromRGBO(133, 14, 53, 1),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
 
-                    if (product != null) {
-                      return Text(
-                        "Stok: ${product!.stock}",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: product!.stock > 0 ? Colors.black : Colors.red,  // TAMBAHAN: Warna merah jika stok 0
-                        ),
-                      );
-                    } else {
-                      return const Text(
-                        "Stok: Tidak tersedia",
-                        style: TextStyle(fontSize: 14, color: Colors.grey),
-                      );
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
-
-          // IKON KERANJANG HIJAU UNTUK ADD TO CART
-          Consumer<CartProvider_inandiar>(
-            builder: (context, cartProv_inandiar, child) {
-              // TAMBAHAN: Cari produk berdasarkan nama untuk dapatkan stok dan productId
-              ProductModelGalang? product;
-              cartProv_inandiar.productsData_inandiar.forEach((id, p) {
-                if (p.name == title_yossy) {
-                  product = p;
-                }
-              });
-
-              final isOutOfStock = product == null || product!.stock <= 0;  // TAMBAHAN: Cek jika stok habis
-
-              return IconButton(
-                icon: Icon(
-                  Icons.add_shopping_cart,
-                  color: isOutOfStock ? Colors.grey : Colors.green,  // TAMBAHAN: Warna abu jika stok habis
-                  size: 28,
-                ),
-                onPressed: isOutOfStock  // TAMBAHAN: Nonaktifkan jika stok habis
-                    ? null
-                    : () {
-                        // TAMBAHAN: Cari productId yang benar berdasarkan nama
-                        String correctProductId = title_yossy;  // Default ke title_yossy jika tidak ditemukan
+                    // ==== STOK ====
+                    Consumer<CartProvider_inandiar>(
+                      builder: (context, cartProv_inandiar, child) {
+                        ProductModelGalang? product;
                         cartProv_inandiar.productsData_inandiar.forEach((id, p) {
-                          if (p.name == title_yossy) {
-                            correctProductId = id;  // Gunakan ID unik yang benar
-                          }
+                          if (p.name == title_yossy) product = p;
                         });
 
-                        cartProv_inandiar.addToCart_inandiar(
-                          ProductModelGalang(
-                            productId: correctProductId,  // TAMBAHAN: Gunakan productId yang benar
-                            name: title_yossy,
-                            price: num.parse(price_yossy),
-                            imageUrl: image_yossy,
-                            stock: product?.stock ?? 0,  // TAMBAHAN: Sertakan stok
-                          ),
-                        );
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Ditambahkan ke keranjang"),
-                          ),
+                        if (product != null) {
+                          return Text(
+                            "Stok: ${product!.stock}",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: product!.stock > 0 ? Colors.black : Colors.red,
+                            ),
+                          );
+                        }
+                        return const Text(
+                          "Stok: Tidak tersedia",
+                          style: TextStyle(fontSize: 14, color: Colors.grey),
                         );
                       },
-              );
-            },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          /// ===== ICON KERANJANG DI POJOK KANAN ATAS =====
+          Positioned(
+            bottom : 8,
+            right: 8,
+            child: Consumer<CartProvider_inandiar>(
+              builder: (context, cartProv_inandiar, child) {
+                ProductModelGalang? product;
+                cartProv_inandiar.productsData_inandiar.forEach((id, p) {
+                  if (p.name == title_yossy) product = p;
+                });
+
+                final isOutOfStock = product == null || product!.stock <= 0;
+
+                return Container(
+                  decoration: BoxDecoration(
+                    color: const Color.fromRGBO(133, 14, 53, 1),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 4,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.add_shopping_cart,
+                      color: isOutOfStock ? Colors.grey : Colors.white,
+                      size: 24,
+                    ),
+                    onPressed: isOutOfStock
+                        ? null
+                        : () {
+                            String correctProductId = title_yossy;
+                            cartProv_inandiar.productsData_inandiar.forEach((id, p) {
+                              if (p.name == title_yossy) correctProductId = id;
+                            });
+
+                            cartProv_inandiar.addToCart_inandiar(
+                              ProductModelGalang(
+                                productId: correctProductId,
+                                name: title_yossy,
+                                price: num.parse(price_yossy),
+                                imageUrl: image_yossy,
+                                stock: product?.stock ?? 0,
+                              ),
+                            );
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Ditambahkan ke keranjang"),
+                              ),
+                            );
+                          },
+                  ),
+                );
+              },
+            ),
           ),
         ],
       ),

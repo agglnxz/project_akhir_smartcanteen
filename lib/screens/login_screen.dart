@@ -38,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen_yossy> {
 
       if (profile == null) {
         // Profil belum ada di Firestore — tetap bisa login, tapi beri peringatan
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Login berhasil, tetapi profil belum lengkap.'), backgroundColor: Colors.orange));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Login berhasil, tetapi profil belum lengkap.'),  backgroundColor: Color.fromRGBO(133, 14, 53, 1)));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Login berhasil!')));
       }
@@ -48,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen_yossy> {
     } on Exception catch (e) {
       final message = e.toString().replaceFirst('Exception: ', '');
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message), backgroundColor: Color.fromRGBO(133, 14, 53, 1),));
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -63,15 +63,46 @@ class _LoginScreenState extends State<LoginScreen_yossy> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset("assets/images/logo.jpg", height: 120),
+            Image.asset("assets/images/icon.png", height: 240),
             const SizedBox(height: 20),
             TextField(controller: _emailC, decoration: const InputDecoration(labelText: 'Email (...@poliwangi.ac.id)', border: OutlineInputBorder()), keyboardType: TextInputType.emailAddress),
             const SizedBox(height: 12),
             TextField(controller: _passC, decoration: const InputDecoration(labelText: 'Password', border: OutlineInputBorder()), obscureText: true),
             const SizedBox(height: 20),
-            ElevatedButton(onPressed: _isLoading ? null : _handleLogin, child: _isLoading ? const SizedBox(height: 18, width: 18, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)) : const Text('Login')),
+             ElevatedButton(
+              onPressed: _isLoading ? null : _handleLogin,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color.fromRGBO(133, 14, 53, 1),
+                foregroundColor: Colors.white,
+                disabledBackgroundColor: Color.fromRGBO(238, 105, 131, 1),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(0),
+                ),
+                minimumSize: const Size(double.infinity, 48),
+              ),
+              child: _isLoading
+                  ? const SizedBox(
+                      height: 18,
+                      width: 18,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                    )
+                  : const Text('Login'),
+            ),
             const SizedBox(height: 12),
-            TextButton(onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const RegisterScreen_yossy())), child: const Text('Belum punya akun? Register'))
+             TextButton(
+              onPressed: () => Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => const RegisterScreen_yossy()),
+              ),
+              style: TextButton.styleFrom(
+                foregroundColor: Color.fromRGBO(133, 14, 53, 1),
+              ),
+              child: const Text('Belum punya akun? Register'),
+            )
+
           ],
         ),
       ),

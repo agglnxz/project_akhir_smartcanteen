@@ -43,7 +43,7 @@ class _RegisterScreenState extends State<RegisterScreen_yossy> {
     } on Exception catch (e) {
       final message = e.toString().replaceFirst('Exception: ', '');
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message), backgroundColor: Color.fromRGBO(133, 14, 53, 1)));
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -57,7 +57,7 @@ class _RegisterScreenState extends State<RegisterScreen_yossy> {
         padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
-            Image.asset("assets/images/logo.jpg", height: 120),
+            Image.asset("assets/images/icon.png", height: 240),
             const SizedBox(height: 20),
             TextField(controller: _nameC, decoration: const InputDecoration(labelText: 'Nama Lengkap', border: OutlineInputBorder())),
             const SizedBox(height: 12),
@@ -67,12 +67,39 @@ class _RegisterScreenState extends State<RegisterScreen_yossy> {
             const SizedBox(height: 12),
             TextField(controller: _passC, decoration: const InputDecoration(labelText: 'Password (min 6)', border: OutlineInputBorder()), obscureText: true),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _isLoading ? null : _handleRegister,
-              child: _isLoading ? const SizedBox(height: 18, width: 18, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)) : const Text('Daftar'),
+             ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color.fromRGBO(133, 14, 53, 1), // warna button
+              foregroundColor: Colors.white,                   // warna tulisan
+              disabledBackgroundColor: Color.fromRGBO(238, 105, 131, 1), // saat loading
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(0),
+              ),
+              minimumSize: const Size(double.infinity, 48),
             ),
-            const SizedBox(height: 12),
-            TextButton(onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginScreen_yossy())), child: const Text('Sudah punya akun? Login'))
+            onPressed: _isLoading ? null : _handleRegister,
+            child: _isLoading
+                ? const SizedBox(
+                    height: 18,
+                    width: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  )
+                : const Text('Daftar'),
+          ),
+
+            TextButton(
+              onPressed: () => Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => const LoginScreen_yossy()),
+              ),
+              style: TextButton.styleFrom(
+                foregroundColor: Color.fromRGBO(133, 14, 53, 1), // warna teks
+              ),
+              child: const Text('Sudah punya akun? Login'),
+            )
           ],
         ),
       ),

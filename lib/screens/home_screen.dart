@@ -30,19 +30,29 @@ class HomeScreen_yossy extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Smart E-Kantin"),
+        title: const Text("Smart Canteen",
+         style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Color.fromRGBO(133, 14, 53, 1),
         actions: [
           IconButton(
             onPressed: () {
               Navigator.pushNamed(context, "/cart", arguments: profile);
             },
             icon: const Icon(Icons.shopping_cart),
+            style: IconButton.styleFrom(
+            foregroundColor: Colors.white,
+          ),
+
           ),
 
           // tombol logout
           IconButton(
             onPressed: logout,
             icon: const Icon(Icons.logout),
+            style: IconButton.styleFrom(
+            foregroundColor: Colors.white,
+            ),
           ),
         ],
       ),
@@ -64,16 +74,21 @@ class HomeScreen_yossy extends StatelessWidget {
           final productsMap_inandiar = {for (var p in products) p.productId: p};
           Provider.of<CartProvider_inandiar>(context, listen: false).setProductsData_inandiar(productsMap_inandiar);
 
-          return ListView.separated(
-            padding: const EdgeInsets.all(16),
+          return GridView.builder(
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             itemCount: products.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 12),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,          // 2 kolom
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+              childAspectRatio: 0.88,     // proporsi tinggi/width
+            ),
             itemBuilder: (context, index) {
-              final product = products[index];
+              final product_yossy = products[index];
               return CardMenu_yossy(
-                title_yossy: product.name,
-                price_yossy: product.price.toString(),
-                image_yossy: product.imageUrl,
+                title_yossy: product_yossy.name,
+                price_yossy: product_yossy.price.toString(),
+                image_yossy: product_yossy.imageUrl,
               );
             },
           );
