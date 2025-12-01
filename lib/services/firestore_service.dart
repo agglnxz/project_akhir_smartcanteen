@@ -1,16 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/product_model.dart'; 
-import '../models/user_model.dart';  // MODEL USER BARU
+import '../models/product_model.dart';
+import '../models/user_model.dart';
 
 class FirestoreServiceGalang {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  
+
   // COLLECTION NAMES
   final String _productsCollectionGalang = 'Products';
-  final String _usersCollectionGalang = 'Users';  
+  final String _usersCollectionGalang = 'Users';
 
 
-  // Seeding data produk
+  // Seeder Produk Dummy
   Future<void> seedProductsGalang() async {
     final List<ProductModelGalang> dummyProductsGalang = [
       ProductModelGalang(productId: 'P001', name: 'Nasi Goreng', price: 15000, stock: 25, imageUrl: 'assets/images/nasigoreng.jpg'),
@@ -28,23 +28,19 @@ class FirestoreServiceGalang {
     WriteBatch batchGalang = _db.batch();
 
     for (var product in dummyProductsGalang) {
-      DocumentReference docRefGalang = _db
-          .collection(_productsCollectionGalang)
-          .doc(product.productId);
-      batchGalang.set(docRefGalang, product.toJsonGalang());
+      final ref = _db.collection(_productsCollectionGalang).doc(product.productId);
+      batchGalang.set(ref, product.toJsonGalang());
     }
 
     await batchGalang.commit();
   }
 
-  // Get all products
+  // GET All Products
   Future<List<ProductModelGalang>> getProductsGalang() async {
     try {
-      final querySnapshotGalang =
-          await _db.collection(_productsCollectionGalang).get();
-
-      return querySnapshotGalang.docs
-          .map((doc) => ProductModelGalang.fromJsonGalang(doc.data()!))
+      final query = await _db.collection(_productsCollectionGalang).get();
+      return query.docs
+          .map((doc) => ProductModelGalang.fromJsonGalang(doc.data()))
           .toList();
     } catch (e) {
       print('Error fetching products: $e');
@@ -52,8 +48,10 @@ class FirestoreServiceGalang {
     }
   }
 
+  // ===============================================================
+  // ==================== BAGIAN USER ==============================
+  // ===============================================================
 
-  // SIMPAN DATA USER BARU DARI AUTH
   Future<void> saveUserToFirestore({
     required String uid,
     required UserModelGalang user,
@@ -70,11 +68,56 @@ class FirestoreServiceGalang {
   }
 
   Future<bool> checkUserIdExists(String userId) async {
-    final query = await _db.collection(_usersCollectionGalang).where('user_id', isEqualTo: userId).get();
+    final query = await _db
+        .collection(_usersCollectionGalang)
+        .where('user_id', isEqualTo: userId)
+        .get();
     return query.docs.isNotEmpty;
   }
 
-Future<void> createTransaction_inandiar({
+  // ===============================================================
+  // ==================== UPDATE STOK (VALIDASI) ===================
+  // ===============================================================
+
+  /// Update stok dengan pengurangan qty (transaksi atomic)
+  Future<void> updateProductStock_inandiar(String productId, int qtyToReduce) async {
+    try {
+      final ref = _db.collection(_productsCollectionGalang).doc(productId);
+      await _db.runTransaction((transaction) async {
+        final snap = await transaction.get(ref);
+
+        if (!snap.exists) throw Exception("Produk tidak ditemukan");
+
+        final currentStock = snap.data()?['stock'] ?? 0;
+        if (currentStock < qtyToReduce) {
+          throw Exception("Stok tidak cukup untuk produk $productId");
+        }
+
+        transaction.update(ref, {'stock': currentStock - qtyToReduce});
+      });
+    } catch (e) {
+      throw Exception("Gagal update stok: $e");
+    }
+  }
+
+  // ===============================================================
+  // ========== TAMBAHAN BARU — UPDATE STOK LANGSUNG ===============
+  // ===============================================================
+
+  /// Dipakai CartProvider: update stok langsung ke nilai baru
+  Future<void> updateProductStockGalang(String productId, int newStock) async {
+    final ref = _db.collection(_productsCollectionGalang).doc(productId);
+
+    await ref.update({
+      'stock': newStock,
+    });
+  }
+
+  // ===============================================================
+  // ==================== TRANSAKSI ================================
+  // ===============================================================
+
+  Future<void> createTransaction_inandiar({
     required String trxId,
     required num finalTotal,
     required List<Map<String, dynamic>> items,
@@ -87,14 +130,14 @@ Future<void> createTransaction_inandiar({
       "date": FieldValue.serverTimestamp(),
     });
 
-    // UPDATE STOK PRODUK
+    // Update stok produk
     WriteBatch batch = _db.batch();
 
     for (var item in items) {
       final productId = item["product_id"];
       final qty = item["qty"];
 
-      final ref = _db.collection("Products").doc(productId);
+      final ref = _db.collection(_productsCollectionGalang).doc(productId);
 
       batch.update(ref, {
         "stock": FieldValue.increment(-qty),
@@ -104,4 +147,3 @@ Future<void> createTransaction_inandiar({
     await batch.commit();
   }
 }
-
