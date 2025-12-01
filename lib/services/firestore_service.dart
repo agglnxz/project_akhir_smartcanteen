@@ -9,9 +9,6 @@ class FirestoreServiceGalang {
   final String _productsCollectionGalang = 'Products';
   final String _usersCollectionGalang = 'Users';
 
-  // ===============================================================
-  // =============== CRUD PRODUK ===================================
-  // ===============================================================
 
   // Seeder Produk Dummy
   Future<void> seedProductsGalang() async {
