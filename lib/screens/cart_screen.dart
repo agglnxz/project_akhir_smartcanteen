@@ -18,12 +18,16 @@ class _CartScreen_yossyState extends State<CartScreen_yossy> {
 
   @override
   Widget build(BuildContext context_inandiar) {
-    final cartProv_inandiar = Provider.of<CartProvider_inandiar>(context_inandiar);
+    final cartProv_inandiar =
+        Provider.of<CartProvider_inandiar>(context_inandiar);
 
     final totalBefore_inandiar = cartProv_inandiar.totalPrice_inandiar();
     final nim_inandiar = nimController_inandiar.text.trim();
     final finalTotalPreview_inandiar =
-        cartProv_inandiar.applyNimLogic_inandiar(totalBefore_inandiar, nim_inandiar);
+        cartProv_inandiar.applyNimLogic_inandiar(
+      totalBefore_inandiar,
+      nim_inandiar,
+    );
 
     return Scaffold(
       appBar: AppBar(title: const Text("Keranjang")),
@@ -42,16 +46,23 @@ class _CartScreen_yossyState extends State<CartScreen_yossy> {
               children: [
                 Expanded(
                   child: ListView(
-                    children: cartProv_inandiar.cart_inandiar.keys.map((id_inandiar) {
-                      final qty_inandiar = cartProv_inandiar.cart_inandiar[id_inandiar]!;
+                    children:
+                        cartProv_inandiar.cart_inandiar.keys.map((id_inandiar) {
+                      final qty_inandiar =
+                          cartProv_inandiar.cart_inandiar[id_inandiar]!;
                       final product_inandiar =
                           cartProv_inandiar.productsData_inandiar[id_inandiar];
-                      if (product_inandiar == null) return const SizedBox.shrink();
+                      if (product_inandiar == null)
+                        return const SizedBox.shrink();
 
-                      final subtotal_inandiar = product_inandiar.price * qty_inandiar;
+                      final subtotal_inandiar =
+                          product_inandiar.price * qty_inandiar;
 
                       return Card(
-                        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                        margin: const EdgeInsets.symmetric(
+                          vertical: 8,
+                          horizontal: 16,
+                        ),
                         child: ListTile(
                           leading: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
@@ -75,15 +86,23 @@ class _CartScreen_yossyState extends State<CartScreen_yossy> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                icon: const Icon(Icons.add, color: Colors.green),
+                                icon: const Icon(
+                                  Icons.add,
+                                  color: Colors.green,
+                                ),
                                 onPressed: () {
-                                  cartProv_inandiar.addToCart_inandiar(product_inandiar);
+                                  cartProv_inandiar.addToCart_inandiar(
+                                      product_inandiar);
                                 },
                               ),
                               IconButton(
-                                icon: const Icon(Icons.remove, color: Colors.red),
+                                icon: const Icon(
+                                  Icons.remove,
+                                  color: Colors.red,
+                                ),
                                 onPressed: () {
-                                  cartProv_inandiar.removeFromCart_inandiar(id_inandiar);
+                                  cartProv_inandiar.removeFromCart_inandiar(
+                                      id_inandiar);
                                 },
                               ),
                             ],
@@ -102,15 +121,12 @@ class _CartScreen_yossyState extends State<CartScreen_yossy> {
                   color: Colors.grey[200],
                   child: Column(
                     children: [
-                      // ----------------------------
-                      // INPUT NIM
-                      // ----------------------------
                       TextField(
                         controller: nimController_inandiar,
                         decoration: InputDecoration(
                           labelText: "Masukkan NIM untuk identifikasi promo",
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                         onChanged: (_) {
@@ -120,27 +136,70 @@ class _CartScreen_yossyState extends State<CartScreen_yossy> {
 
                       const SizedBox(height: 16),
 
-                      Text("Total Sebelum Diskon/Ongkir: Rp $totalBefore_inandiar"),
-                      Text("Total Akhir: Rp $finalTotalPreview_inandiar"),
-                      Text(cartProv_inandiar.promoDescription_inandiar),
+                      // ================================
+                      // 🔥 TAMPILAN STRUK BELANJA (MODIFIKASI UI)
+                      // ================================
+                      Container(
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.grey.shade300),
+                        ),
+                        child: Column(
+                          children: [
+                            _rowStruk("Total Sebelum Diskon/Ongkir",
+                                "Rp $totalBefore_inandiar"),
+                            const SizedBox(height: 6),
+                            _rowStruk(
+                              "Total Akhir",
+                              "Rp $finalTotalPreview_inandiar",
+                              bold: true,
+                            ),
+                            const SizedBox(height: 8),
 
-                      const SizedBox(height: 10),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                cartProv_inandiar.promoDescription_inandiar,
+                                style: const TextStyle(
+                                  color: Color.fromRGBO(238, 105, 131, 1),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 12),
 
                       ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(133, 14, 53, 1),
+                        foregroundColor: Color.fromRGBO(252, 245, 238, 1),
+                        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
                         onPressed: () async {
                           final nimUser = nimController_inandiar.text.trim();
                           if (nimUser.isEmpty) {
                             ScaffoldMessenger.of(context_inandiar).showSnackBar(
-                              const SnackBar(content: Text("Masukkan NIM terlebih dahulu")),
+                              const SnackBar(
+                                content: Text("Masukkan NIM terlebih dahulu"),
+                              ),
                             );
                             return;
                           }
 
-                          // simpan item sebelum cart kosong
-                          final items =
-                              cartProv_inandiar.cartItems_inandiar.entries.map((entry) {
-                            final product =
-                                cartProv_inandiar.productsData_inandiar[entry.key];
+                          final items = cartProv_inandiar
+                              .cartItems_inandiar
+                              .entries
+                              .map((entry) {
+                            final product = cartProv_inandiar
+                                .productsData_inandiar[entry.key];
                             return {
                               "product_id": entry.key,
                               "name": product?.name ?? "Unknown",
@@ -149,11 +208,13 @@ class _CartScreen_yossyState extends State<CartScreen_yossy> {
                             };
                           }).toList();
 
-                          final totalAkhir =
-                              await cartProv_inandiar.checkout_inandiar(nimUser);
+                          final totalAkhir = await cartProv_inandiar
+                              .checkout_inandiar(nimUser);
 
                           final firestoreService = FirestoreServiceGalang();
-                          final trxId = DateTime.now().millisecondsSinceEpoch.toString();
+                          final trxId = DateTime.now()
+                              .millisecondsSinceEpoch
+                              .toString();
 
                           try {
                             await firestoreService.createTransaction_inandiar(
@@ -162,52 +223,54 @@ class _CartScreen_yossyState extends State<CartScreen_yossy> {
                               items: items,
                             );
 
-                            // ============================
-                            // TAMPAILAN DIALOG CHECKOUT
-                            // ============================
                             showDialog(
                               context: context_inandiar,
                               builder: (BuildContext dialogContext) {
                                 return AlertDialog(
                                   shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16)),
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
                                   title: const Text(
                                     "Detail Transaksi",
                                     style: TextStyle(
-                                        fontWeight: FontWeight.bold, fontSize: 18),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
                                   ),
                                   content: SingleChildScrollView(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        ...items.map(
-                                          (item) {
-                                            final subtotal = (item['price'] as num) *
-                                                (item['qty'] as num);
-                                            return Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(vertical: 4),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  Expanded(
-                                                    child: Text(
-                                                        "${item['name']} (x${item['qty']})"),
+                                        ...items.map((item) {
+                                          final subtotal =
+                                              (item['price'] as num) *
+                                                  (item['qty'] as num);
+                                          return Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 4,
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Expanded(
+                                                  child: Text(
+                                                    "${item['name']} (x${item['qty']})",
                                                   ),
-                                                  Text("Rp $subtotal"),
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                        ),
+                                                ),
+                                                Text("Rp $subtotal"),
+                                              ],
+                                            ),
+                                          );
+                                        }),
 
                                         const Divider(),
 
-                                        // ============================
-                                        // DISKON ATAU GRATIS ONGKIR
-                                        // ============================
-                                        if (cartProv_inandiar.shippingCost_inandiar == 0)
+                                        if (cartProv_inandiar
+                                                .shippingCost_inandiar ==
+                                            0)
                                           Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
@@ -217,7 +280,9 @@ class _CartScreen_yossyState extends State<CartScreen_yossy> {
                                             ],
                                           ),
 
-                                        if (cartProv_inandiar.shippingCost_inandiar > 0)
+                                        if (cartProv_inandiar
+                                                .shippingCost_inandiar >
+                                            0)
                                           Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
@@ -238,12 +303,14 @@ class _CartScreen_yossyState extends State<CartScreen_yossy> {
                                             const Text(
                                               "Total Bayar",
                                               style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                             Text(
                                               "Rp $totalAkhir",
                                               style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -252,6 +319,14 @@ class _CartScreen_yossyState extends State<CartScreen_yossy> {
                                   ),
                                   actions: [
                                     ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Color.fromRGBO(133, 14, 53, 1),
+                                          foregroundColor: Color.fromRGBO(252, 245, 238, 1),  
+                                          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                        ),
                                       onPressed: () {
                                         Navigator.of(dialogContext).pop();
                                         Navigator.pop(context_inandiar);
@@ -264,7 +339,9 @@ class _CartScreen_yossyState extends State<CartScreen_yossy> {
                             );
                           } catch (e) {
                             ScaffoldMessenger.of(context_inandiar).showSnackBar(
-                              SnackBar(content: Text("Checkout gagal: $e")),
+                              SnackBar(
+                                content: Text("Checkout gagal: $e"),
+                              ),
                             );
                           }
                         },
@@ -277,4 +354,29 @@ class _CartScreen_yossyState extends State<CartScreen_yossy> {
             ),
     );
   }
+}
+
+// ==================================================
+// 🔧 FUNGSI STRUK (TIDAK MENGGANGGU LOGIKA)
+// ==================================================
+Widget _rowStruk(String label, String value, {bool bold = false}) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Text(
+        label,
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+      Text(
+        value,
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+    ],
+  );
 }
