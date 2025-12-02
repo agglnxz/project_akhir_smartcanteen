@@ -20,12 +20,14 @@ class HomeScreen_yossy extends StatelessWidget {
     final FirestoreServiceGalang firestoreService = FirestoreServiceGalang();
     final FirebaseAuth auth = FirebaseAuth.instance;
 
-    void logout() async {
-      await auth.signOut();
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const LoginScreen_yossy()),
-      );
+      void logout() async {
+        await auth.signOut();
+        if(context.mounted){
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const LoginScreen_yossy()),
+        );
+      }
     }
 
     return Scaffold(

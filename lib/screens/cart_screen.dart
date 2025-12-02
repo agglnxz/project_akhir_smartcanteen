@@ -136,9 +136,7 @@ class _CartScreen_yossyState extends State<CartScreen_yossy> {
 
                       const SizedBox(height: 16),
 
-                      // ================================
-                      // 🔥 TAMPILAN STRUK BELANJA (MODIFIKASI UI)
-                      // ================================
+                    
                       Container(
                         padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
@@ -356,9 +354,7 @@ class _CartScreen_yossyState extends State<CartScreen_yossy> {
   }
 }
 
-// ==================================================
-// 🔧 FUNGSI STRUK (TIDAK MENGGANGGU LOGIKA)
-// ==================================================
+
 Widget _rowStruk(String label, String value, {bool bold = false}) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
