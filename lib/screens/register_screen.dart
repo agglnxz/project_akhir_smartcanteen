@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_akhir_smartcanteen/widgets/loading_indicator.dart';
 import '../controllers/auth_controller.dart';
 import 'login_screen.dart';
 
@@ -79,13 +80,9 @@ class _RegisterScreenState extends State<RegisterScreen_yossy> {
             ),
             onPressed: _isLoading ? null : _handleRegister,
             child: _isLoading
-                ? const SizedBox(
-                    height: 18,
-                    width: 18,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
+                ? const LoadingIndicatorGalang(
+                    size: 18,
+                    color: Colors.white,
                   )
                 : const Text('Daftar'),
           ),

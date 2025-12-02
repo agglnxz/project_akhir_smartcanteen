@@ -22,11 +22,11 @@ void main() async {
   );
 
   // TAMBAHAN: Jalankan seed produk jika belum ada, agar checkout berhasil
-  final firestoreService = FirestoreServiceGalang();
-  final products = await firestoreService.getProductsGalang();
-  if (products.isEmpty) {
-    await firestoreService.seedProductsGalang();
-  }
+    final firestoreService = FirestoreServiceGalang();
+    final products = await firestoreService.getProductsGalang();
+    if (products.isEmpty) {
+      await firestoreService.seedProductsGalang();
+    }
 
   runApp(
     MultiProvider(

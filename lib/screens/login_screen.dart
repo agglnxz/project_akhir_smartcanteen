@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_akhir_smartcanteen/widgets/loading_indicator.dart';
 import 'home_screen.dart';
 import 'register_screen.dart';
 import '../controllers/auth_controller.dart';
@@ -81,27 +82,26 @@ class _LoginScreenState extends State<LoginScreen_yossy> {
                 minimumSize: const Size(double.infinity, 48),
               ),
               child: _isLoading
-                  ? const SizedBox(
-                      height: 18,
-                      width: 18,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      ),
-                    )
+                  ? const LoadingIndicatorGalang(
+                     size:18,
+                     color: Colors.white,
+                  )
                   : const Text('Login'),
             ),
             const SizedBox(height: 12),
-             TextButton(
-              onPressed: () => Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => const RegisterScreen_yossy()),
-              ),
-              style: TextButton.styleFrom(
-                foregroundColor: Color.fromRGBO(133, 14, 53, 1),
-              ),
-              child: const Text('Belum punya akun? Register'),
-            )
+              TextButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (_) => const RegisterScreen_yossy()),
+                  );
+                },
+                style: TextButton.styleFrom(
+                  // Warna teks merah maroon sesuai tema Anda
+                  foregroundColor: const Color.fromRGBO(133, 14, 53, 1),
+                ),
+                child: const Text('Belum punya akun? Register'),
+              )
 
           ],
         ),
