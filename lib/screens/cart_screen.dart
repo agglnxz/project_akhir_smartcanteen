@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_akhir_smartcanteen/widgets/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import '../providers/cart_provider.dart';
 import '../models/product_model.dart';
@@ -15,6 +16,7 @@ class CartScreen_yossy extends StatefulWidget {
 
 class _CartScreen_yossyState extends State<CartScreen_yossy> {
   final TextEditingController nimController_inandiar = TextEditingController();
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context_inandiar) {
@@ -181,7 +183,7 @@ class _CartScreen_yossyState extends State<CartScreen_yossy> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                        onPressed: () async {
+                        onPressed: _isLoading ? null : () async {
                           final nimUser = nimController_inandiar.text.trim();
                           if (nimUser.isEmpty) {
                             ScaffoldMessenger.of(context_inandiar).showSnackBar(
@@ -191,6 +193,9 @@ class _CartScreen_yossyState extends State<CartScreen_yossy> {
                             );
                             return;
                           }
+                          setState(() {
+                            _isLoading = true;
+                          });
 
                           final items = cartProv_inandiar
                               .cartItems_inandiar
@@ -220,9 +225,10 @@ class _CartScreen_yossyState extends State<CartScreen_yossy> {
                               finalTotal: totalAkhir,
                               items: items,
                             );
-
+                            if(!mounted) return;
                             showDialog(
                               context: context_inandiar,
+                              barrierDismissible: false,
                               builder: (BuildContext dialogContext) {
                                 return AlertDialog(
                                   shape: RoundedRectangleBorder(
@@ -338,12 +344,21 @@ class _CartScreen_yossyState extends State<CartScreen_yossy> {
                           } catch (e) {
                             ScaffoldMessenger.of(context_inandiar).showSnackBar(
                               SnackBar(
-                                content: Text("Checkout gagal: $e"),
-                              ),
+                                content: Text("Checkout gagal: $e")),
                             );
+                          }finally{
+                            if(mounted){
+                              setState(() {
+                                _isLoading = false;
+                              });
+                            }
                           }
                         },
-                        child: const Text("Checkout"),
+                        child:_isLoading ? const LoadingIndicatorGalang(
+                          size: 20,
+                          color: Colors.white,
+                        )
+                         :const Text("Checkout"),
                       ),
                     ],
                   ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';  // TAMBAHAN: Jika belum ada
+import 'package:provider/provider.dart';  
 import '../widgets/cart_menu.dart';
 import '../services/firestore_service.dart';
 import '../models/product_model.dart';
@@ -58,8 +58,8 @@ class HomeScreen_yossy extends StatelessWidget {
           ),
         ],
       ),
-      body: FutureBuilder<List<ProductModelGalang>>(
-        future: firestoreService.getProductsGalang(),
+      body: StreamBuilder<List<ProductModelGalang>>(
+        stream: firestoreService.getProductsStream_Galang(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const LoadingIndicatorGalang();
@@ -71,10 +71,14 @@ class HomeScreen_yossy extends StatelessWidget {
 
           final products = snapshot.data!;
 
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (context.mounted) {
           // TAMBAHAN: Set data produk ke CartProvider setelah fetch berhasil
           // Ini memungkinkan CartScreen mengakses data produk untuk menampilkan gambar, nama, dll.
           final productsMap_inandiar = {for (var p in products) p.productId: p};
           Provider.of<CartProvider_inandiar>(context, listen: false).setProductsData_inandiar(productsMap_inandiar);
+            }
+          });
 
           return GridView.builder(
             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
