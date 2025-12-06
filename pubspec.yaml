@@ -37,6 +37,7 @@ dependencies:
   # Firebase versi terbaru & kompatibel dengan Flutter 3.9+
   firebase_core: ^3.8.1
   firebase_auth: ^5.3.2
+  crypto: ^3.0.3
   cloud_firestore: ^5.4.4
   provider: ^6.1.2
 
