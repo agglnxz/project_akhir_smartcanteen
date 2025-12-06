@@ -33,10 +33,14 @@ class AuthControllerFirman {
 
       final uid = userCredential.user!.uid;
 
+      final passwordHash = UserModelGalang.generateHash(password.trim());
+
       final profile = UserModelGalang(
         userId: userIdFromInput.trim(),
         email: email.trim(),
         fullName: fullName.trim(),
+        passwordHash: passwordHash,
+        role: "user", // default
       );
 
       await _firestore.saveUserToFirestore(uid: uid, user: profile);
