@@ -10,7 +10,7 @@ class FirestoreServiceGalang {
   final String _usersCollectionGalang = 'Users';
 
 
-  // Seeder Produk Dummy
+// Seeder Produk Dummy (Hanya nambah kalau belum ada)
   Future<void> seedProductsGalang() async {
     final List<ProductModelGalang> dummyProductsGalang = [
       ProductModelGalang(productId: 'P001', name: 'Nasi Goreng', price: 15000, stock: 25, imageUrl: 'assets/images/nasigoreng.jpg'),
@@ -23,16 +23,27 @@ class FirestoreServiceGalang {
       ProductModelGalang(productId: 'P008', name: 'Bakso Kuah', price: 18000, stock: 28, imageUrl: 'assets/images/baksokuah.jpg'),
       ProductModelGalang(productId: 'P009', name: 'Air Mineral', price: 3000, stock: 60, imageUrl: 'assets/images/airmineral.jpg'),
       ProductModelGalang(productId: 'P010', name: 'Nasi Padang', price: 20000, stock: 10, imageUrl: 'assets/images/nasipadang.jpg'),
+      ProductModelGalang(productId: 'P011', name: 'Pizza', price: 50000, stock: 10, imageUrl: 'assets/images/nasipadang.jpg'), 
+      ProductModelGalang(productId: 'P012', name: 'Burger', price: 45000, stock: 10, imageUrl: 'assets/images/nasipadang.jpg'), 
+      ProductModelGalang(productId: 'P013', name: 'Pasta', price: 50000, stock: 20, imageUrl: 'assets/images/nasipadang.jpg'), 
     ];
 
-    WriteBatch batchGalang = _db.batch();
+    final collectionRef = _db.collection(_productsCollectionGalang);
 
+    // Loop satu per satu untuk cek keberadaan data
     for (var product in dummyProductsGalang) {
-      final ref = _db.collection(_productsCollectionGalang).doc(product.productId);
-      batchGalang.set(ref, product.toJsonGalang());
-    }
+      final docRef = collectionRef.doc(product.productId);
+      final docSnap = await docRef.get();
 
-    await batchGalang.commit();
+      // HANYA simpan jika dokumen belum ada
+      if (!docSnap.exists) {
+        await docRef.set(product.toJsonGalang());
+        print("✅ [Seeder] Menambahkan produk baru: ${product.name}");
+      } else {
+        // Jika sudah ada, jangan diapa-apain agar stok tidak kereset
+        print("⏭️ [Seeder] Produk sudah ada: ${product.name} (Skip)");
+      }
+    }
   }
 
   // GET All Products
@@ -46,6 +57,17 @@ class FirestoreServiceGalang {
       print('Error fetching products: $e');
       return [];
     }
+  }
+
+  Stream<List<ProductModelGalang>> getProductsStream_Galang() {
+    return _db
+        .collection(_productsCollectionGalang)
+        .snapshots() // <--- Bedanya disini: snapshots() artinya CCTV/Live
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return ProductModelGalang.fromJsonGalang(doc.data());
+      }).toList();
+    });
   }
 
   // ===============================================================

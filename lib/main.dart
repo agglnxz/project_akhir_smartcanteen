@@ -21,12 +21,8 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,  // TAMBAHAN: Gunakan firebase_options untuk koneksi benar
   );
 
-  // TAMBAHAN: Jalankan seed produk jika belum ada, agar checkout berhasil
-    final firestoreService = FirestoreServiceGalang();
-    final products = await firestoreService.getProductsGalang();
-    if (products.isEmpty) {
-      await firestoreService.seedProductsGalang();
-    }
+final firestoreService = FirestoreServiceGalang();
+await firestoreService.seedProductsGalang();
 
   runApp(
     MultiProvider(
